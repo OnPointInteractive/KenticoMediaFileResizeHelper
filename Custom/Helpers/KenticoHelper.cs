@@ -35,7 +35,7 @@ namespace Custom.Helpers
 
         public static String GetResponsiveImageURL(String imageURL, Int32 width = 0, Int32 height = 0)
         {
-            if (String.IsNullOrWhiteSpace(imageURL))
+            if (String.IsNullOrWhiteSpace(imageURL) || imageURL.Contains("getmedia"))
                 return imageURL;
 
             try
@@ -44,8 +44,8 @@ namespace Custom.Helpers
 
                 MediaLibraryInfo mediaLibrary;
                 
-                if (!imagePath[2].Equals("assets") && !imageURL.Contains("getmedia"))
-                    mediaLibrary = GetCachedMediaLibriaryInfo(imagePath[2]);
+                if (!imagePath[2].Equals("assets"))
+                    mediaLibrary = CacheHelpers.GetCachedMediaLibriaryInfo(imagePath[2]);
                 else
                 {
                     mediaLibrary = null;
@@ -56,7 +56,7 @@ namespace Custom.Helpers
                 {
                     // get the file now by the media library and the path
                     var imageName = imagePath.Last().Split(new[] { "?" }, StringSplitOptions.RemoveEmptyEntries)[0];
-                    var file = GetCachedMediaFileInfo(mediaLibrary.LibraryID, GetImagePath(imagePath, imageName));
+                    var file = CacheHelpers.GetCachedMediaFileInfo(mediaLibrary.LibraryID, GetImagePath(imagePath, imageName));
 
                     if (file != null && width == 0)
                         return String.Format("/getmedia/{0}/{1}", file.FileGUID, file.FileName);
